@@ -1,9 +1,16 @@
 const express = require("express");
 const next = require("next");
 
+// const port = 3000;
+// const dev = (process.env.NEXT_ENV = "production");
+// const app = next({ dir: ".", dev });
+// const handle = app.getRequestHandler();
+
+const dev = process.env.NODE_ENV !== "production";
+const hostname = "localhost";
 const port = 3000;
-const dev = (process.env.NEXT_ENV = "production");
-const app = next({ dir: ".", dev });
+// when using middleware `hostname` and `port` must be provided below
+const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app
