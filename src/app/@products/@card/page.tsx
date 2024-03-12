@@ -1,3 +1,4 @@
+"use client";
 import "./style.scss";
 
 function Card({ product }: { product: Object }) {
