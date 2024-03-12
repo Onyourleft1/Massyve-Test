@@ -1,17 +1,40 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./style.scss";
 import axios from "axios";
 import Cookie from "js-cookie";
-import { LoginContext } from "../layout";
+import LoginContext from "@/context/LoginContext";
+import UserContext from "@/context/UserContext";
+import Products from "../products/page";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [, setLogin] = useContext(LoginContext);
-  const login = (e) => {
-    e.preventDefault();
+  const { login, setLogin } = useContext(LoginContext);
+  const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    const tkn = Cookie.get("token");
+    if (tkn) {
+      axios
+        .post(`${process.env.NEXT_PUBLIC_BACK_URL}/Users/getLoginInfo`, {
+          token: tkn,
+        })
+        .then((resp) => {
+          setUser(resp.data);
+          setLogin(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setLogin(false);
+      setUser({});
+    }
+  }, []);
+
+  const loginl = () => {
     axios
       .post(`${process.env.NEXT_PUBLIC_BACK_URL}/Users/login`, {
         email: email,
@@ -20,6 +43,8 @@ function Login() {
       .then((responce) => {
         Cookie.set("token", responce.data.token);
         setLogin(true);
+        setEmail("");
+        setPassword("");
       })
       .catch((err) => {
         console.log(err);
@@ -27,30 +52,41 @@ function Login() {
       });
   };
   return (
-    <div id="login_container">
-      <h1>Login</h1>
-      <form onSubmit={login}>
-        <div>
-          <label htmlFor="email">Email: </label>
-          <input
-            id="email"
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+    <>
+      {login ? (
+        <Products />
+      ) : (
+        <div id="login_container">
+          <h1>Login</h1>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              loginl();
+            }}
+          >
+            <div>
+              <label htmlFor="email">Email: </label>
+              <input
+                id="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="password">Password: </label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <button type="submit">Login</button>
+          </form>
         </div>
-        <div>
-          <label htmlFor="password">Password: </label>
-          <input
-            id="password"
-            type="text"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+      )}
+    </>
   );
 }
 

@@ -1,7 +1,7 @@
-"use client";
 import "./style.scss";
 
-function Card({ product }: { product: Object }) {
+function Card(props) {
+  const product = props.product;
   return (
     <div id="card_container">
       <h3>Name: {product.name}</h3>
