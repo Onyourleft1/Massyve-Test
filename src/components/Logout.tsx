@@ -1,3 +1,4 @@
+"use client";
 import { LoginContext, UserContext } from "@/app/layout";
 import axios from "axios";
 import React, { useContext } from "react";
