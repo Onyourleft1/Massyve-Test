@@ -32,7 +32,7 @@ function Login() {
       setLogin(false);
       setUser({});
     }
-  }, []);
+  }, [setLogin, setUser]);
 
   const loginl = () => {
     axios
