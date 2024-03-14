@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import Card from "./@card/page";
+import Card from "../../components/card/Card";
 import "./style.scss";
 import Logout from "@/components/Logout";
 import LoginContext from "@/context/LoginContext";
@@ -38,7 +38,7 @@ function Products() {
       setLogin(false);
       setUser({});
     }
-  }, []);
+  }, [setLogin, setUser]);
 
   return (
     <div>
